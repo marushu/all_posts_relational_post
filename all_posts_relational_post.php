@@ -73,7 +73,7 @@ function all_posts_relational_post( $post, $taxonomy, $num, $content = true,  $o
 
 			if ( has_post_thumbnail( $post_id ) ) {
 
-				$size           = 'thumb_293_192';
+				$size           = 'thumb_293_192' ? 'thumb_293_192' : 'thumbnail';
 				$default_attr   = array(
 					'class' => "attachment-$size",
 					'alt'   => trim( esc_html( $post_title ) ),
@@ -106,7 +106,7 @@ function all_posts_relational_post( $post, $taxonomy, $num, $content = true,  $o
 			$html .= '<h4>' . $post_title . '</h4>';
 			$html .= $content ? '<p>' . $post_content . '</p>' : '';
 
-			$html .= implode( ', ', $post_term_array );
+			$html .= ! empty( $post_term_array ) ? implode( ', ', $post_term_array ) : '';
 
 			$html .= '</div><!-- / .relational_text -->';
 			$html .= '</div><!-- / .relational_detail -->';

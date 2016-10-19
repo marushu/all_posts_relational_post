@@ -24,6 +24,9 @@ function all_posts_relational_post( $post, $taxonomy, $num, $content = true,  $o
 	$post_type_name = $post_type_obj->label;
 	$terms = wp_get_post_terms( get_the_ID(), $taxonomy );
 	$term_slugs = array();
+
+	$title_img = '<img class="aligncenter half" src="' . get_stylesheet_directory_uri() . '/images/title_repated_blog.png" alt="関連する社長ブログ">';
+
 	foreach ( $terms as $term ) {
 
 		$slugs = $term->slug;
@@ -54,7 +57,13 @@ function all_posts_relational_post( $post, $taxonomy, $num, $content = true,  $o
 
 		$html .= '<div class="relational_post_outer">';
 		$html .= '<div class="relational_post">';
-		$html .= '<h3>関連する' . esc_attr( $post_type_name ) . ' : </h3>';
+
+		if ( $post_type === 'blog' ) {
+			$html .= '<h3 class="relational_post_title">' . $title_img . '</h3>';
+		} else {
+			$html .= '<h3 class="relational_post_title">関連する' . esc_attr( $post_type_name ) . ' : </h3>';
+		}
+		$html .= '<div class="relational_block">';
 
 		foreach ( $relational_posts as $relational_post ) {
 			$post_id    = $relational_post->ID;
@@ -83,7 +92,12 @@ function all_posts_relational_post( $post, $taxonomy, $num, $content = true,  $o
 
 			} else {
 
-				$post_thumbnail = '';
+				$post_thumbnail_url = get_stylesheet_directory_uri() . '/images/works_no_image.png';
+				$post_thumbnail = sprintf(
+					'<img src="%1$s" width="293" height="" alt="%2$s" title="%2$s">',
+					esc_url( $post_thumbnail_url ),
+					trim( esc_html( $post_title ) )
+				);
 
 			}
 
@@ -95,7 +109,6 @@ function all_posts_relational_post( $post, $taxonomy, $num, $content = true,  $o
 				}
 			}
 
-
 			$html .= '<div class="relational_detail">';
 			$html .= '<div class="relational_thumb">';
 			$html .= '<a href="' . esc_url( $post_url ) . '">';
@@ -103,16 +116,22 @@ function all_posts_relational_post( $post, $taxonomy, $num, $content = true,  $o
 			$html .= '</a>';
 			$html .= '</div><!-- / .relational_thumb -->';
 			$html .= '<div class="relational_text">';
-			$html .= '<h4>' . $post_title . '</h4>';
+
+			if ( $post_type === 'blog' ) {
+				$html .= '<h4><a href="' . esc_url( $post_url ) . '" title="' . $post_title . '" >' . $post_title . '</a></h4>';
+			} else {
+				$html .= '<h4>' . $post_title . '</h4>';
+			}
 			$html .= $content ? '<p>' . $post_content . '</p>' : '';
 
-			$html .= ! empty( $post_term_array ) ? implode( ', ', $post_term_array ) : '';
+			//$html .= ! empty( $post_term_array ) ? implode( ', ', $post_term_array ) : '';
 
 			$html .= '</div><!-- / .relational_text -->';
 			$html .= '</div><!-- / .relational_detail -->';
 
 		}
 
+		$html .= '</div><!-- / .relational_block -->';
 		$html .= '</div><!-- / .relational_post -->';
 		$html .= '</div><!-- / .relational_post_outer -->';
 
